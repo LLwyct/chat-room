@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <title>Socket.IO chat</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+    #app {
+        height: 100vh;
+        background: #FAFAFA;
+    }
+    #inputbox {
+        direction: inherit;
+    }
+    .footer {
+        display: flex;
+        justify-content: space-around;
+    }
+    .btn {
+        border-radius: 4px;
+    }
+    .v-input input{
+        max-height: 1000px;
+        line-height: 40px;
+        margin-top: 0;
+        font-size: 18px;
+    }
+    .msg-box .msg-info {
+        color: #43A047;
+        font-size: 12px;
+    }
+    .msg-box .msg-content {
+        font-size: 16px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <v-content>
+            <v-toolbar flat app class="grey lighten-3">
+                <v-toolbar-title>{{username}}</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-side-icon></v-toolbar-side-icon>
+            </v-toolbar>
+            <v-container>
+                <v-layout row wrap>
+                    <v-flex xs12 v-for="msg in message_queue">
+                        <div class="msg-box">
+                            <span>
+                                <p class="msg-info"><b>{{msg.sendername}}</b> at {{msg.date}}</p>
+                                <p class="msg-content">{{msg.msg_content}}</p>
+                            </span>
+                        </div>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+            <v-footer app flat height="70" class="footer grey lighten-3">
+                <v-text-field hide-details height="40" outline v-model="message" class="ml-2 mr-2"></v-text-field>
+                <v-btn large @click.prevent="sendMessage" flat class="grey lighten-1 btn">Send</v-btn>
+            </v-footer>
+            <v-dialog v-model="dialog" max-width="290" persistent>
+                <v-card>
+                    <v-card-title class="headline">选择你的用户名</v-card-title>
+
+                    <v-card-text>
+                        <v-text-field regular v-model="username"></v-text-field>
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" flat="flat" @click="dialog = false">
+                            Agree
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-content>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+        <script>
+            var socket = io();
+            var vm = new Vue({
+                el: '#app',
+        data: {
+            username: '',
+            message: 'hello',
+            message_queue: [],
+            dialog: true
+        },
+        methods: {
+            sendMessage () {
+                let message_group = {
+                    sendername: this.username == null ? 'unknow' : this.username,
+                    msg_content: this.message,
+                    date: Date()
+                }
+                this.message_queue.push(message_group)
+                
+                socket.emit('chat-message', message_group)
+
+                this.message = ''
+
+            }
+        },
+        mounted: function () {
+            
+            socket.on('chat-message', (msg) => {
+                this.message_queue.push(msg)
+            })
+        }
+    })
+    </script>
+</body>
+</html>
