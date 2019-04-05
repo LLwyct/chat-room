@@ -1,0 +1,72 @@
+#app {
+    height: 100%;
+    background: #FAFAFA;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    display: flex;
+    border-radius: 4px;
+    flex: 1;
+}
+
+.msg-box .msg-info-myself {
+    color: #43A047;
+    font-size: 12px;
+}
+
+.msg-box .msg-info-other {
+    color: rgb(74, 88, 168);
+    font-size: 12px;
+}
+
+.msg-box .msg-content {
+    font-size: 16px;
+}
+
+.input-box {
+    display: flex;
+    border-radius: 6px;
+    border: 2px solid #BDBDBD;
+    padding: 8px 10px;
+    outline: none;
+    font-size: 16px;
+    transition: 0.5s;
+    flex: 4;
+    margin-left: 20px;
+}
+
+.input-box:focus {
+    border: 2px solid #424242;
+}
+
+.room-info {
+    background: gray;
+    border-radius: 20px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    margin: 0;
+}
+
+.global-alert {
+    position: fixed;
+    bottom: 65px;
+    left: 50%;
+    margin-left: -66px;
+    z-index: 1;
+    height: 25px;
+    transition: 1s;
+}
+
+[v-cloak] {
+    display: none;
+}
